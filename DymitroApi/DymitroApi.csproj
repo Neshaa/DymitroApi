@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dymitro.Common\Dymitro.Common.csproj" />
+    <ProjectReference Include="..\Dymitro.Contracts\Dymitro.Contracts.csproj" />
+    <ProjectReference Include="..\Dymitro.Services\Dymitro.Services.csproj" />
+    <ProjectReference Include="..\Dymitro.DAL.Dapper.Context\Dymitro.DAL.Dapper.Context.csproj" />
+  </ItemGroup>
+
+</Project>

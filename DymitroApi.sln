@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35728.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DymitroApi", "DymitroApi\DymitroApi.csproj", "{A6FCF80E-681D-4EB9-9444-B8FDEA906499}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dymitro.Common", "Dymitro.Common\Dymitro.Common.csproj", "{2C056CF3-7901-4A96-BFF5-985790B874B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dymitro.DAL.Dapper.Context", "Dymitro.DAL.Dapper.Context\Dymitro.DAL.Dapper.Context.csproj", "{6CD02691-2DE3-49CD-AAD6-56DF196AA382}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{581B2F77-8FA7-4DCD-8673-722B67B2C938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dymitro.Contracts", "Dymitro.Contracts\Dymitro.Contracts.csproj", "{941F6ADF-3F93-4497-AAD4-B5F52F70331E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dymitro.Models", "Dymitro.Models\Dymitro.Models.csproj", "{8A211C56-2D5A-42CB-9B9A-51843FF45DD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dymitro.Services", "Dymitro.Services\Dymitro.Services.csproj", "{CD917D13-C682-4135-A54B-2C371DFF9CA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{63B1D73B-078C-4A3C-A77E-4E3E47663EB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6FCF80E-681D-4EB9-9444-B8FDEA906499}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6FCF80E-681D-4EB9-9444-B8FDEA906499}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6FCF80E-681D-4EB9-9444-B8FDEA906499}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6FCF80E-681D-4EB9-9444-B8FDEA906499}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C056CF3-7901-4A96-BFF5-985790B874B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C056CF3-7901-4A96-BFF5-985790B874B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C056CF3-7901-4A96-BFF5-985790B874B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C056CF3-7901-4A96-BFF5-985790B874B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD02691-2DE3-49CD-AAD6-56DF196AA382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD02691-2DE3-49CD-AAD6-56DF196AA382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD02691-2DE3-49CD-AAD6-56DF196AA382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD02691-2DE3-49CD-AAD6-56DF196AA382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{941F6ADF-3F93-4497-AAD4-B5F52F70331E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{941F6ADF-3F93-4497-AAD4-B5F52F70331E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{941F6ADF-3F93-4497-AAD4-B5F52F70331E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{941F6ADF-3F93-4497-AAD4-B5F52F70331E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A211C56-2D5A-42CB-9B9A-51843FF45DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A211C56-2D5A-42CB-9B9A-51843FF45DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A211C56-2D5A-42CB-9B9A-51843FF45DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A211C56-2D5A-42CB-9B9A-51843FF45DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD917D13-C682-4135-A54B-2C371DFF9CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD917D13-C682-4135-A54B-2C371DFF9CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD917D13-C682-4135-A54B-2C371DFF9CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD917D13-C682-4135-A54B-2C371DFF9CA2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C056CF3-7901-4A96-BFF5-985790B874B7} = {581B2F77-8FA7-4DCD-8673-722B67B2C938}
+		{6CD02691-2DE3-49CD-AAD6-56DF196AA382} = {63B1D73B-078C-4A3C-A77E-4E3E47663EB5}
+		{941F6ADF-3F93-4497-AAD4-B5F52F70331E} = {581B2F77-8FA7-4DCD-8673-722B67B2C938}
+		{8A211C56-2D5A-42CB-9B9A-51843FF45DD0} = {581B2F77-8FA7-4DCD-8673-722B67B2C938}
+		{CD917D13-C682-4135-A54B-2C371DFF9CA2} = {581B2F77-8FA7-4DCD-8673-722B67B2C938}
+	EndGlobalSection
+EndGlobal

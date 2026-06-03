@@ -1,0 +1,6 @@
+@DymitroApi_HostAddress = http://localhost:5265
+
+GET {{DymitroApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
