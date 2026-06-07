@@ -13,6 +13,6 @@ namespace Dymitro.Models.DTOs
         public decimal? Gross { get; set; }
         public decimal? Course { get; set; }
         public decimal? NetInEuro { get; set; }
-        public string MonthYear { get; set; }
+        public string? MonthYear { get; set; }
     }
 }
