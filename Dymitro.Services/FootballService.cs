@@ -51,5 +51,46 @@ namespace Dymitro.Services
                 Active = t.Active
             });
         }
+
+        public async Task<bool> CreateFootballTeamAsync(FootballTeamDto team)
+        {
+            const string sql = @"
+                INSERT INTO public.footballteams (name, country, continent, active)
+                VALUES (@Name, @Country, @Continent, @Active)";
+
+            using var connection = _context.CreateConnection();
+            int rows = await connection.ExecuteAsync(sql, new
+            {
+                team.Name,
+                team.Country,
+                team.Continent,
+                team.Active
+            });
+
+            return rows > 0;
+        }
+
+        public async Task<bool> UpdateFootballTeamAsync(int id, FootballTeamDto team)
+        {
+            const string sql = @"
+                UPDATE public.footballteams
+                SET name = @Name,
+                    country = @Country,
+                    continent = @Continent,
+                    active = @Active
+                WHERE id = @Id";
+
+            using var connection = _context.CreateConnection();
+            int rows = await connection.ExecuteAsync(sql, new
+            {
+                Id = id,
+                team.Name,
+                team.Country,
+                team.Continent,
+                team.Active
+            });
+
+            return rows > 0;
+        }
     }
 }

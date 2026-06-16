@@ -1,4 +1,5 @@
 using Dymitro.Contracts;
+using Dymitro.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DymitroApi.Controllers
@@ -22,6 +23,20 @@ namespace DymitroApi.Controllers
         {
             var result = await _footballService.GetFootballTeamsAsync(name, country, continent);
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateFootballTeamAsync([FromBody] FootballTeamDto team)
+        {
+            bool isSuccess = await _footballService.CreateFootballTeamAsync(team);
+            return isSuccess ? Ok() : BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateFootballTeamAsync(int id, [FromBody] FootballTeamDto team)
+        {
+            bool isSuccess = await _footballService.UpdateFootballTeamAsync(id, team);
+            return isSuccess ? Ok() : NotFound();
         }
     }
 }
