@@ -9,6 +9,7 @@ namespace Intelisale.DymitroApi.ServiceExtensions
         public static void AddServices(this IServiceCollection services)
         {
             services.AddTransient<ISalaryService, SalaryService>();
+            services.AddTransient<IFootballService, FootballService>();
         }
     }
 }
