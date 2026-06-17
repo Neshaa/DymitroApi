@@ -1,5 +1,6 @@
 using Dymitro.Contracts;
 using Dymitro.Models.DTOs;
+using Dymitro.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DymitroApi.Controllers
@@ -37,6 +38,20 @@ namespace DymitroApi.Controllers
         {
             bool isSuccess = await _footballService.UpdateFootballTeamAsync(id, team);
             return isSuccess ? Ok() : NotFound();
+        }
+
+        [Route("Football/GetWorldCupStatistics/{year}")]
+        [HttpGet]
+        public async Task<IActionResult> GetWorldCupStatistics(int year)
+        {
+            return Ok(await _footballService.GetWorldCupStatistics(year));
+        }
+
+        [Route("Football/GetWorldCupStatisticsByCountry/{year}")]
+        [HttpGet]
+        public async Task<IActionResult> GetWorldCupStatisticsByCountry(int year)
+        {
+            return Ok(await _footballService.GetWorldCupStatisticsByCountry(year));
         }
     }
 }

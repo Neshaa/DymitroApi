@@ -7,5 +7,9 @@ namespace Dymitro.Contracts
         Task<IEnumerable<FootballTeamDto>> GetFootballTeamsAsync(string? name, string? country, string? continent);
         Task<bool> CreateFootballTeamAsync(FootballTeamDto team);
         Task<bool> UpdateFootballTeamAsync(int id, FootballTeamDto team);
+        Task<IEnumerable<WorldCupStatsDto>> GetWorldCupStatistics(int year);
+
+        Task<IEnumerable<WorldCupStatsDto>> GetWorldCupStatisticsByCountry(int year);
+
     }
 }
