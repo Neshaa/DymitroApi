@@ -26,6 +26,16 @@ namespace DymitroApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("suggestions")]
+        public async Task<IActionResult> GetFootballTeamsSuggestionsAsync([FromQuery] string search)
+        {
+            if (string.IsNullOrWhiteSpace(search))
+                return BadRequest("Search term is required.");
+
+            var result = await _footballService.GetFootballTeamsSuggestionsAsync(search);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateFootballTeamAsync([FromBody] FootballTeamDto team)
         {
@@ -52,6 +62,13 @@ namespace DymitroApi.Controllers
         public async Task<IActionResult> GetWorldCupStatisticsByCountry(int year)
         {
             return Ok(await _footballService.GetWorldCupStatisticsByCountry(year));
+        }
+
+        [Route("Football/InsertWorldCupPlayer")]
+        [HttpPost]
+        public async Task<IActionResult> InsertData([FromBody] WCTeamDto request)
+        {
+            return Ok(_footballService.InsertData(request));
         }
     }
 }

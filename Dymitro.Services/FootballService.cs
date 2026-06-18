@@ -55,6 +55,29 @@ namespace Dymitro.Services
             });
         }
 
+        public async Task<IEnumerable<FootballTeamDto>> GetFootballTeamsSuggestionsAsync(string search)
+        {
+            if (string.IsNullOrWhiteSpace(search))
+                return Enumerable.Empty<FootballTeamDto>();
+
+            const string sql = @"SELECT id, name, country, continent, active FROM public.footballteams
+                                 WHERE name ILIKE @Search OR country ILIKE @Search
+                                 ORDER BY name
+                                 LIMIT 10";
+
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<FootballTeam>(sql, new { Search = $"%{search}%" });
+
+            return result.Select(t => new FootballTeamDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Country = t.Country,
+                Continent = t.Continent,
+                Active = t.Active
+            });
+        }
+
         public async Task<bool> CreateFootballTeamAsync(FootballTeamDto team)
         {
             const string sql = @"
@@ -202,6 +225,52 @@ namespace Dymitro.Services
             return FinallResult;
         }
 
+        public async Task<int> InsertData(WCTeamDto requset)
+        {
+            const string sqlSelect = @"SELECT id, teamid, year, noofplayers FROM public.worldcupplayers
+                                       WHERE teamId = @teamId AND year = @year";
+
+            using var connection = _context.CreateConnection();
+            var dataFromBase = await connection.QueryAsync<WorldCupPlayers>(sqlSelect, new
+            {
+                teamId = requset.Id,
+                year = requset.Year
+            });
+
+            if (!dataFromBase.Any())
+            {
+                const string sqlIns = @"
+                    INSERT INTO public.worldcupplayers (teamid, year, noofplayers)
+                    VALUES (@teamId, @year, @noOfPlayers)";
+
+                int rows = await connection.ExecuteAsync(sqlIns, new
+                {
+                    teamId = requset.Id,
+                    year = requset.Year,
+                    noOfPlayers = requset.No
+                });
+
+                return rows;
+            }
+            else
+            {
+                const string sqlUpd = @"
+                    UPDATE public.worldcupplayers
+                    SET noofplayers = @noOfPlayers
+                    WHERE teamId = @teamId AND year = @year";
+
+                int rows = await connection.ExecuteAsync(sqlUpd, new
+                {
+                    teamId = requset.Id,
+                    year = requset.Year,
+                    noOfPlayers = requset.No
+                });
+
+                return rows;
+            }
+        }
+
+        #region Private
         private async Task<List<WorldCupStatsDto>> GetStatsByYear(int year)
         {
             List<WorldCupStatsDto> AllDto = new List<WorldCupStatsDto>();
@@ -276,5 +345,7 @@ namespace Dymitro.Services
 
             return AllDto;
         }
+
+        #endregion    
     }
 }
