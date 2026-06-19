@@ -42,6 +42,8 @@ namespace Dymitro.Services
                 parameters.Add("Continent", $"%{continent}%");
             }
 
+            sql += " ORDER BT name, country";
+
             using var connection = _context.CreateConnection();
             var result = await connection.QueryAsync<FootballTeam>(sql, parameters);
 
