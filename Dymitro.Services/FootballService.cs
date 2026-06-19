@@ -284,7 +284,7 @@ namespace Dymitro.Services
             sql += " WHERE wc.Year <= @Year";
             parameters.Add("Year", year);
 
-            sql += " GROUP BY ft.Name, ft.Country, ft.Id ORDER BY 1 DESC, LENGTH(ft.Name) DESC";
+            sql += " GROUP BY ft.Name, ft.Country, ft.Id ORDER BY 1 DESC, LENGTH(ft.Name) DESC, ft.Name ASC";
 
             using var connection = _context.CreateConnection();
             var result = await connection.QueryAsync<WorldCupStats>(sql, parameters);
@@ -325,7 +325,7 @@ namespace Dymitro.Services
             sql += " WHERE wc.Year <= @Year";
             parameters.Add("Year", year);
 
-            sql += " GROUP BY ft.Country ORDER BY 1 DESC, LENGTH(ft.Country) DESC";
+            sql += " GROUP BY ft.Country ORDER BY 1 DESC, LENGTH(ft.Country) DESC, ft.Country ASC";
 
             using var connection = _context.CreateConnection();
             var result = await connection.QueryAsync<WorldCupStats>(sql, parameters);
