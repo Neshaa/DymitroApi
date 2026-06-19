@@ -68,7 +68,7 @@ namespace DymitroApi.Controllers
         [HttpPost]
         public async Task<IActionResult> InsertData([FromBody] WCTeamDto request)
         {
-            return Ok(_footballService.InsertData(request));
+            return Ok(await _footballService.InsertData(request));
         }
     }
 }
