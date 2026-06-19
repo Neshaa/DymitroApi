@@ -233,7 +233,7 @@ namespace Dymitro.Services
             using var connection = _context.CreateConnection();
             var dataFromBase = await connection.QueryAsync<WorldCupPlayers>(sqlSelect, new
             {
-                teamId = requset.Id,
+                teamId = requset.Team.Id,
                 year = requset.Year
             });
 
@@ -245,7 +245,7 @@ namespace Dymitro.Services
 
                 int rows = await connection.ExecuteAsync(sqlIns, new
                 {
-                    teamId = requset.Id,
+                    teamId = requset.Team.Id,
                     year = requset.Year,
                     noOfPlayers = requset.No
                 });
@@ -261,7 +261,7 @@ namespace Dymitro.Services
 
                 int rows = await connection.ExecuteAsync(sqlUpd, new
                 {
-                    teamId = requset.Id,
+                    teamId = requset.Team.Id,
                     year = requset.Year,
                     noOfPlayers = requset.No
                 });
