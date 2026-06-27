@@ -54,7 +54,7 @@ namespace Dymitro.Services
             var result = await connection.QueryAsync<SportCompetitionDbResult>(sql, new
             {
                 Sport = $"%{sport}%",
-                Competition = $"%{competition}%"
+                Competition = $"{competition}"
             });
 
             return result.Select(MapToDto);
@@ -79,7 +79,7 @@ namespace Dymitro.Services
             var result = await connection.QueryAsync<SportCompetitionStatsDbResult>(sql, new
             {
                 Sport = $"%{sport}%",
-                Competition = $"%{competition}%"
+                Competition = $"{competition}"
             });
 
             return result.Select(r => new SportCompetitionStatsDto
