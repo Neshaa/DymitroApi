@@ -47,7 +47,7 @@ namespace Dymitro.Services
                 LEFT JOIN public.sportcountries c1 ON sc.first = c1.country
                 LEFT JOIN public.sportcountries c2 ON sc.second = c2.country
                 LEFT JOIN public.sportcountries c3 ON sc.third = c3.country
-                WHERE sc.sport ILIKE @Sport AND sc.competition ILIKE @Competition
+                WHERE sc.sport ILIKE @Sport AND sc.competition = @Competition
                 ORDER BY sc.year DESC";
 
             using var connection = _context.CreateConnection();
@@ -71,7 +71,7 @@ namespace Dymitro.Services
                 FROM public.sportcountries c
                 INNER JOIN public.sportcompetitions sc
                        ON sc.first = c.country OR sc.second = c.country OR sc.third = c.country
-                WHERE sc.sport ILIKE @Sport AND sc.competition ILIKE @Competition
+                WHERE sc.sport ILIKE @Sport AND sc.competition = @Competition
                 GROUP BY c.country, c.active, c.balkan
                 ORDER BY FirstCount DESC, SecondCount DESC, ThirdCount DESC";
 
