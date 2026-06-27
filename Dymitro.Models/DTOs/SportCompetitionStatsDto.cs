@@ -2,7 +2,7 @@ namespace Dymitro.Models.DTOs
 {
     public class SportCompetitionStatsDto
     {
-        public string? Name { get; set; }
+        public SportCountryDto? Name { get; set; }
         public int FirstCount { get; set; }
         public int SecondCount { get; set; }
         public int ThirdCount { get; set; }
