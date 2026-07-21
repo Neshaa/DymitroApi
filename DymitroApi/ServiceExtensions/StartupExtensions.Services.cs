@@ -12,6 +12,7 @@ namespace Intelisale.DymitroApi.ServiceExtensions
             services.AddTransient<IFootballService, FootballService>();
             services.AddTransient<ISportCompetitionService, SportCompetitionService>();
             services.AddTransient<ISportActivityService, SportActivityService>();
+            services.AddTransient<INbaPlayerService, NbaPlayerService>();
         }
     }
 }
