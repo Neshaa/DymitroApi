@@ -6,7 +6,7 @@ namespace Dymitro.Models.DTOs
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Country { get; set; }
-        public bool? Active { get; set; }
-        public bool? Balkan { get; set; }
+        public short? Active { get; set; }
+        public short? Balkan { get; set; }
     }
 }
