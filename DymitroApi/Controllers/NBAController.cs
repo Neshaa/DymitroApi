@@ -35,5 +35,27 @@ namespace DymitroApi.Controllers
             bool isSuccess = await _nbaPlayerService.UpdateNbaPlayerAsync(player);
             return isSuccess ? Ok() : BadRequest();
         }
+
+
+        [HttpGet("GetPoints/{season}/{balkan}")]
+        public async Task<IActionResult> GetPoints(string season, string balkan)
+        {
+            var result = await _nbaPlayerService.GetPointsAsync(season, balkan);
+            return Ok(result);
+        }
+
+        [HttpGet("GetRebounds/{season}/{balkan}")]
+        public async Task<IActionResult> GetRebounds(string season, string balkan)
+        {
+            var result = await _nbaPlayerService.GetReboundsAsync(season, balkan);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAsists/{season}/{balkan}")]
+        public async Task<IActionResult> GetAsists(string season, string balkan)
+        {
+            var result = await _nbaPlayerService.GetAsistsAsync(season, balkan);
+            return Ok(result);
+        }
     }
 }

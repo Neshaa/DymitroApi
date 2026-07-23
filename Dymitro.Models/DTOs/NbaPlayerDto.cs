@@ -8,5 +8,10 @@ namespace Dymitro.Models.DTOs
         public string? Country { get; set; }
         public short? Active { get; set; }
         public short? Balkan { get; set; }
+        public string FullName
+        {
+            get { return String.Concat(this.FirstName, " ", this.LastName); }
+            set { }
+        }
     }
 }

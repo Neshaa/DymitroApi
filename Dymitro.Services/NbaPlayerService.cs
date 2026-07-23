@@ -1,7 +1,9 @@
 using Dapper;
 using Dymitro.Contracts;
 using Dymitro.DAL.Dapper.Context;
+using Dymitro.Models.Domain;
 using Dymitro.Models.DTOs;
+using System.Diagnostics.Metrics;
 
 namespace Dymitro.Services
 {
@@ -66,5 +68,242 @@ namespace Dymitro.Services
 
             return rows > 0;
         }
+
+        public async Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetPointsBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetPointsBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetPointsBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Id equals prev.Player.Id into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Points = curr.Points,
+                        PtsPosition = curr.PtsPosition,
+                        PositionMove = prevMatch == null || prevMatch.PtsPosition == 0 ? 0 : prevMatch.PtsPosition - curr.PtsPosition
+                    }).OrderByDescending(x => x.Points).ToList();
+        }
+
+        public async Task<IEnumerable<AllStatsDto>> GetReboundsAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetReboundsBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetReboundsBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetReboundsBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Id equals prev.Player.Id into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Rebounds = curr.Rebounds,
+                        RbnPosition = curr.RbnPosition,
+                        PositionMove = prevMatch == null || prevMatch.RbnPosition == 0 ? 0 : prevMatch.RbnPosition - curr.RbnPosition
+                    }).OrderByDescending(x => x.Rebounds).ToList();
+        }
+
+        public async Task<IEnumerable<AllStatsDto>> GetAsistsAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetAsistsBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetAsistsBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetAsistsBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Id equals prev.Player.Id into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Asists = curr.Asists,
+                        AstPosition = curr.AstPosition,
+                        PositionMove = prevMatch == null || prevMatch.AstPosition == 0 ? 0 : prevMatch.AstPosition - curr.AstPosition
+                    }).OrderByDescending(x => x.Asists).ToList();
+        }
+
+        #region Private
+
+        private static List<short> GetBalkanFilter(string balkan) =>
+            balkan == "1" ? new List<short> { 1 } : new List<short> { 0, 1, 77 };
+
+        private static string GetPreviousSeason(string currentSeason) =>
+            currentSeason == "2010" ? "Previous" : (Convert.ToInt32(currentSeason) - 1).ToString();
+
+        private async Task<List<AllStatsDto>> GetPointsBySeasonAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetSeasonRowsAsync(season, balkan, "r.points");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.Points,
+                    Rebounds = r.Rebounds,
+                    Asists = r.Asists,
+                    Season = season,
+                    PtsPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetMetricSumsAsync(season, balkan, "r.points");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.Player,
+                Points = s.MetricSum,
+                PtsPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<List<AllStatsDto>> GetReboundsBySeasonAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetSeasonRowsAsync(season, balkan, "r.rebounds");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.Points,
+                    Rebounds = r.Rebounds,
+                    Asists = r.Asists,
+                    Season = season,
+                    RbnPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetMetricSumsAsync(season, balkan, "r.rebounds");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.Player,
+                Rebounds = s.MetricSum,
+                RbnPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<List<AllStatsDto>> GetAsistsBySeasonAsync(string season, string balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetSeasonRowsAsync(season, balkan, "r.asists");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.Points,
+                    Rebounds = r.Rebounds,
+                    Asists = r.Asists,
+                    Season = season,
+                    AstPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetMetricSumsAsync(season, balkan, "r.asists");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.Player,
+                Asists = s.MetricSum,
+                AstPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<IEnumerable<PlayerSeasonRow>> GetSeasonRowsAsync(string season, string balkan, string orderColumn)
+        {
+            var counteri = GetBalkanFilter(balkan);
+
+            string sql = $@"
+                SELECT r.points AS Points, r.rebounds AS Rebounds, r.asists AS Asists,
+                       p.id AS Id, p.firstname AS FirstName, p.lastname AS LastName, p.country AS Country, p.active AS Active, p.balkan AS Balkan
+                FROM public.nbaresults r
+                JOIN public.nbaplayers p ON r.playerid = p.id
+                WHERE r.season = @Season AND p.balkan IN @Counteri
+                ORDER BY {orderColumn} DESC, p.id ASC";
+
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<PlayerSeasonRow>(sql, new { Season = season, Counteri = counteri });
+        }
+
+        private async Task<List<PlayerMetricSum>> GetMetricSumsAsync(string season, string balkan, string metricColumn)
+        {
+            var counteri = GetBalkanFilter(balkan);
+
+            string sql = $@"
+                SELECT r.playerid AS PlayerId, SUM({metricColumn}) AS MetricSum
+                FROM public.nbaresults r
+                JOIN public.nbaplayers p ON r.playerid = p.id
+                WHERE (r.season = 'Previous' OR r.season <= @Season) AND p.balkan IN @Counteri
+                GROUP BY r.playerid
+                ORDER BY MetricSum DESC";
+
+            using var connection = _context.CreateConnection();
+            var sums = await connection.QueryAsync<PlayerMetricSumRow>(sql, new { Season = season, Counteri = counteri });
+
+            var players = (await GetNbaPlayersAsync()).ToDictionary(p => p.Id);
+
+            return sums
+                .Where(s => players.ContainsKey(s.PlayerId))
+                .Select(s => new PlayerMetricSum { Player = players[s.PlayerId], MetricSum = s.MetricSum })
+                .ToList();
+        }
+
+        private class PlayerSeasonRow
+        {
+            public int? Points { get; set; }
+            public int? Rebounds { get; set; }
+            public int? Asists { get; set; }
+            public int Id { get; set; }
+            public string? FirstName { get; set; }
+            public string? LastName { get; set; }
+            public string? Country { get; set; }
+            public short? Active { get; set; }
+            public short? Balkan { get; set; }
+
+            public NbaPlayerDto ToPlayerDto() => new NbaPlayerDto
+            {
+                Id = Id,
+                FirstName = FirstName,
+                LastName = LastName,
+                Country = Country,
+                Active = Active,
+                Balkan = Balkan
+            };
+        }
+
+        private class PlayerMetricSumRow
+        {
+            public int PlayerId { get; set; }
+            public int? MetricSum { get; set; }
+        }
+
+        private class PlayerMetricSum
+        {
+            public NbaPlayerDto Player { get; set; } = null!;
+            public int? MetricSum { get; set; }
+        }
+
+        #endregion
     }
 }
