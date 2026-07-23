@@ -57,5 +57,26 @@ namespace DymitroApi.Controllers
             var result = await _nbaPlayerService.GetAsistsAsync(season, balkan);
             return Ok(result);
         }
+
+        [HttpGet("GetPointsByCountry/{season}/{balkan}")]
+        public async Task<IActionResult> GetPointsByCountry(string season, bool balkan)
+        {
+            var result = await _nbaPlayerService.GetPointsByCountryAsync(season, balkan);
+            return Ok(result);
+        }
+
+        [HttpGet("GetReboundsByCountry/{season}/{balkan}")]
+        public async Task<IActionResult> GetReboundsByCountry(string season, bool balkan)
+        {
+            var result = await _nbaPlayerService.GetReboundsByCountryAsync(season, balkan);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAsistsByCountry/{season}/{balkan}")]
+        public async Task<IActionResult> GetAsistsByCountry(string season, bool balkan)
+        {
+            var result = await _nbaPlayerService.GetAsistsByCountryAsync(season, balkan);
+            return Ok(result);
+        }
     }
 }

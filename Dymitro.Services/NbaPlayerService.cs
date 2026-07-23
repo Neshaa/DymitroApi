@@ -141,6 +141,78 @@ namespace Dymitro.Services
                     }).OrderByDescending(x => x.Asists).ToList();
         }
 
+        public async Task<IEnumerable<AllStatsDto>> GetPointsByCountryAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetPointsByCountryBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetPointsByCountryBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetPointsByCountryBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Country equals prev.Player.Country into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Points = curr.Points,
+                        PtsPosition = curr.PtsPosition,
+                        PositionMove = prevMatch == null || prevMatch.PtsPosition == 0 ? 0 : prevMatch.PtsPosition - curr.PtsPosition
+                    }).OrderByDescending(x => x.Points).ToList();
+        }
+
+        public async Task<IEnumerable<AllStatsDto>> GetReboundsByCountryAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetReboundsByCountryBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetReboundsByCountryBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetReboundsByCountryBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Country equals prev.Player.Country into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Rebounds = curr.Rebounds,
+                        RbnPosition = curr.RbnPosition,
+                        PositionMove = prevMatch == null || prevMatch.RbnPosition == 0 ? 0 : prevMatch.RbnPosition - curr.RbnPosition
+                    }).OrderByDescending(x => x.Rebounds).ToList();
+        }
+
+        public async Task<IEnumerable<AllStatsDto>> GetAsistsByCountryAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                return await GetAsistsByCountryBySeasonAsync(season, balkan);
+            }
+
+            string previousSeason = GetPreviousSeason(season);
+
+            var currentSeasonStats = await GetAsistsByCountryBySeasonAsync(season, balkan);
+            var previousSeasonStats = await GetAsistsByCountryBySeasonAsync(previousSeason, balkan);
+
+            return (from curr in currentSeasonStats
+                    join prev in previousSeasonStats on curr.Player.Country equals prev.Player.Country into temp
+                    from prevMatch in temp.DefaultIfEmpty()
+                    select new AllStatsDto
+                    {
+                        Player = curr.Player,
+                        Asists = curr.Asists,
+                        AstPosition = curr.AstPosition,
+                        PositionMove = prevMatch == null || prevMatch.AstPosition == 0 ? 0 : prevMatch.AstPosition - curr.AstPosition
+                    }).OrderByDescending(x => x.Asists).ToList();
+        }
+
         #region Private
 
         private static List<short> GetBalkanFilter(bool balkan) =>
@@ -267,6 +339,152 @@ namespace Dymitro.Services
                 .Where(s => players.ContainsKey(s.PlayerId))
                 .Select(s => new PlayerMetricSum { Player = players[s.PlayerId], MetricSum = s.MetricSum })
                 .ToList();
+        }
+
+        private async Task<List<AllStatsDto>> GetPointsByCountryBySeasonAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetCountrySeasonRowsAsync(season, balkan, "TotalPoints DESC, TotalRebounds DESC, TotalAsists DESC");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.TotalPoints,
+                    Rebounds = r.TotalRebounds,
+                    Asists = r.TotalAsists,
+                    Season = season,
+                    PtsPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetCountryMetricSumsAsync(season, balkan, "r.points");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.ToPlayerDto(),
+                Points = s.MetricSum,
+                PtsPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<List<AllStatsDto>> GetReboundsByCountryBySeasonAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetCountrySeasonRowsAsync(season, balkan, "TotalRebounds DESC, TotalPoints DESC, TotalAsists DESC");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.TotalPoints,
+                    Rebounds = r.TotalRebounds,
+                    Asists = r.TotalAsists,
+                    Season = season,
+                    RbnPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetCountryMetricSumsAsync(season, balkan, "r.rebounds");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.ToPlayerDto(),
+                Rebounds = s.MetricSum,
+                RbnPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<List<AllStatsDto>> GetAsistsByCountryBySeasonAsync(string season, bool balkan)
+        {
+            if (season == "Previous")
+            {
+                var rows = await GetCountrySeasonRowsAsync(season, balkan, "TotalAsists DESC, TotalPoints DESC, TotalRebounds DESC");
+                int position = 1;
+                return rows.Select(r => new AllStatsDto
+                {
+                    Player = r.ToPlayerDto(),
+                    Points = r.TotalPoints,
+                    Rebounds = r.TotalRebounds,
+                    Asists = r.TotalAsists,
+                    Season = season,
+                    AstPosition = position++
+                }).ToList();
+            }
+
+            var sums = await GetCountryMetricSumsAsync(season, balkan, "r.asists");
+            int pos = 1;
+            return sums.Select(s => new AllStatsDto
+            {
+                Player = s.ToPlayerDto(),
+                Asists = s.MetricSum,
+                AstPosition = pos++
+            }).ToList();
+        }
+
+        private async Task<IEnumerable<CountrySeasonRow>> GetCountrySeasonRowsAsync(string season, bool balkan, string orderByClause)
+        {
+            var counteri = GetBalkanFilter(balkan);
+
+            string sql = $@"
+                SELECT p.country AS Country, p.balkan AS Balkan,
+                       SUM(r.points) AS TotalPoints, SUM(r.rebounds) AS TotalRebounds, SUM(r.asists) AS TotalAsists
+                FROM public.nbaresults r
+                JOIN public.nbaplayers p ON r.playerid = p.id
+                WHERE r.season = @Season AND p.balkan = ANY(@Counteri)
+                GROUP BY p.country, p.balkan
+                ORDER BY {orderByClause}";
+
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<CountrySeasonRow>(sql, new { Season = season, Counteri = counteri });
+        }
+
+        private async Task<List<CountryMetricSumRow>> GetCountryMetricSumsAsync(string season, bool balkan, string metricColumn)
+        {
+            var counteri = GetBalkanFilter(balkan);
+
+            string sql = $@"
+                SELECT p.country AS Country, p.balkan AS Balkan, SUM({metricColumn}) AS MetricSum
+                FROM public.nbaresults r
+                JOIN public.nbaplayers p ON r.playerid = p.id
+                WHERE (r.season = 'Previous' OR r.season <= @Season) AND p.balkan = ANY(@Counteri)
+                GROUP BY p.country, p.balkan
+                ORDER BY MetricSum DESC";
+
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<CountryMetricSumRow>(sql, new { Season = season, Counteri = counteri });
+
+            return result.ToList();
+        }
+
+        private class CountrySeasonRow
+        {
+            public string? Country { get; set; }
+            public short? Balkan { get; set; }
+            public int? TotalPoints { get; set; }
+            public int? TotalRebounds { get; set; }
+            public int? TotalAsists { get; set; }
+
+            public NbaPlayerDto ToPlayerDto() => new NbaPlayerDto
+            {
+                Country = Country,
+                Balkan = Balkan,
+                Active = 1
+            };
+        }
+
+        private class CountryMetricSumRow
+        {
+            public string? Country { get; set; }
+            public short? Balkan { get; set; }
+            public int? MetricSum { get; set; }
+
+            public NbaPlayerDto ToPlayerDto() => new NbaPlayerDto
+            {
+                Country = Country,
+                Balkan = Balkan,
+                Active = 1
+            };
         }
 
         private class PlayerSeasonRow

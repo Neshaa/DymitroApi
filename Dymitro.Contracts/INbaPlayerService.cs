@@ -11,5 +11,9 @@ namespace Dymitro.Contracts
         Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, bool balkan);
         Task<IEnumerable<AllStatsDto>> GetReboundsAsync(string season, bool balkan);
         Task<IEnumerable<AllStatsDto>> GetAsistsAsync(string season, bool balkan);
+
+        Task<IEnumerable<AllStatsDto>> GetPointsByCountryAsync(string season, bool balkan);
+        Task<IEnumerable<AllStatsDto>> GetReboundsByCountryAsync(string season, bool balkan);
+        Task<IEnumerable<AllStatsDto>> GetAsistsByCountryAsync(string season, bool balkan);
     }
 }
