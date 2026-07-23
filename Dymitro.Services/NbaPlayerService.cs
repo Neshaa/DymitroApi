@@ -239,7 +239,7 @@ namespace Dymitro.Services
                        p.id AS Id, p.firstname AS FirstName, p.lastname AS LastName, p.country AS Country, p.active AS Active, p.balkan AS Balkan
                 FROM public.nbaresults r
                 JOIN public.nbaplayers p ON r.playerid = p.id
-                WHERE r.season = @Season AND p.balkan IN @Counteri
+                WHERE r.season = @Season AND p.balkan = ANY(@Counteri)
                 ORDER BY {orderColumn} DESC, p.id ASC";
 
             using var connection = _context.CreateConnection();
@@ -254,7 +254,7 @@ namespace Dymitro.Services
                 SELECT r.playerid AS PlayerId, SUM({metricColumn}) AS MetricSum
                 FROM public.nbaresults r
                 JOIN public.nbaplayers p ON r.playerid = p.id
-                WHERE (r.season = 'Previous' OR r.season <= @Season) AND p.balkan IN @Counteri
+                WHERE (r.season = 'Previous' OR r.season <= @Season) AND p.balkan = ANY(@Counteri)
                 GROUP BY r.playerid
                 ORDER BY MetricSum DESC";
 
