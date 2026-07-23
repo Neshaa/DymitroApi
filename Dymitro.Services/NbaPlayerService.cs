@@ -69,6 +69,25 @@ namespace Dymitro.Services
             return rows > 0;
         }
 
+        public async Task<bool> InsertNbaResultAsync(NbaResultDto result)
+        {
+            const string sql = @"
+                INSERT INTO public.nbaresults (playerid, season, points, rebounds, asists)
+                VALUES (@PlayerId, @Season, @Points, @Rebounds, @Asists)";
+
+            using var connection = _context.CreateConnection();
+            int rows = await connection.ExecuteAsync(sql, new
+            {
+                result.PlayerId,
+                result.Season,
+                result.Points,
+                result.Rebounds,
+                result.Asists
+            });
+
+            return rows > 0;
+        }
+
         public async Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, bool balkan)
         {
             if (season == "Previous")

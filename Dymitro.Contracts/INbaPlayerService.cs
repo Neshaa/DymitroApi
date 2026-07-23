@@ -7,6 +7,7 @@ namespace Dymitro.Contracts
         Task<IEnumerable<NbaPlayerDto>> GetNbaPlayersAsync();
         Task<bool> InsertNbaPlayerAsync(NbaPlayerDto player);
         Task<bool> UpdateNbaPlayerAsync(NbaPlayerDto player);
+        Task<bool> InsertNbaResultAsync(NbaResultDto result);
 
         Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, bool balkan);
         Task<IEnumerable<AllStatsDto>> GetReboundsAsync(string season, bool balkan);

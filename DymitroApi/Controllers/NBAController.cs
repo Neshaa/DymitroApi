@@ -37,6 +37,13 @@ namespace DymitroApi.Controllers
         }
 
 
+        [HttpPost("results")]
+        public async Task<IActionResult> InsertNbaResultAsync([FromBody] NbaResultDto result)
+        {
+            bool isSuccess = await _nbaPlayerService.InsertNbaResultAsync(result);
+            return isSuccess ? Ok() : BadRequest();
+        }
+
         [HttpGet("GetPoints/{season}/{balkan}")]
         public async Task<IActionResult> GetPoints(string season, bool balkan)
         {
