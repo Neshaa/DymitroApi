@@ -38,21 +38,21 @@ namespace DymitroApi.Controllers
 
 
         [HttpGet("GetPoints/{season}/{balkan}")]
-        public async Task<IActionResult> GetPoints(string season, string balkan)
+        public async Task<IActionResult> GetPoints(string season, bool balkan)
         {
             var result = await _nbaPlayerService.GetPointsAsync(season, balkan);
             return Ok(result);
         }
 
         [HttpGet("GetRebounds/{season}/{balkan}")]
-        public async Task<IActionResult> GetRebounds(string season, string balkan)
+        public async Task<IActionResult> GetRebounds(string season, bool balkan)
         {
             var result = await _nbaPlayerService.GetReboundsAsync(season, balkan);
             return Ok(result);
         }
 
         [HttpGet("GetAsists/{season}/{balkan}")]
-        public async Task<IActionResult> GetAsists(string season, string balkan)
+        public async Task<IActionResult> GetAsists(string season, bool balkan)
         {
             var result = await _nbaPlayerService.GetAsistsAsync(season, balkan);
             return Ok(result);

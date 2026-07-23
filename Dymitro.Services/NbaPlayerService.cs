@@ -69,7 +69,7 @@ namespace Dymitro.Services
             return rows > 0;
         }
 
-        public async Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, string balkan)
+        public async Task<IEnumerable<AllStatsDto>> GetPointsAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -93,7 +93,7 @@ namespace Dymitro.Services
                     }).OrderByDescending(x => x.Points).ToList();
         }
 
-        public async Task<IEnumerable<AllStatsDto>> GetReboundsAsync(string season, string balkan)
+        public async Task<IEnumerable<AllStatsDto>> GetReboundsAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -117,7 +117,7 @@ namespace Dymitro.Services
                     }).OrderByDescending(x => x.Rebounds).ToList();
         }
 
-        public async Task<IEnumerable<AllStatsDto>> GetAsistsAsync(string season, string balkan)
+        public async Task<IEnumerable<AllStatsDto>> GetAsistsAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -143,13 +143,13 @@ namespace Dymitro.Services
 
         #region Private
 
-        private static List<short> GetBalkanFilter(string balkan) =>
-            balkan == "1" ? new List<short> { 1 } : new List<short> { 0, 1, 77 };
+        private static List<short> GetBalkanFilter(bool balkan) =>
+            balkan == true ? new List<short> { 1 } : new List<short> { 0, 1, 77 };
 
         private static string GetPreviousSeason(string currentSeason) =>
             currentSeason == "2010" ? "Previous" : (Convert.ToInt32(currentSeason) - 1).ToString();
 
-        private async Task<List<AllStatsDto>> GetPointsBySeasonAsync(string season, string balkan)
+        private async Task<List<AllStatsDto>> GetPointsBySeasonAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -176,7 +176,7 @@ namespace Dymitro.Services
             }).ToList();
         }
 
-        private async Task<List<AllStatsDto>> GetReboundsBySeasonAsync(string season, string balkan)
+        private async Task<List<AllStatsDto>> GetReboundsBySeasonAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -203,7 +203,7 @@ namespace Dymitro.Services
             }).ToList();
         }
 
-        private async Task<List<AllStatsDto>> GetAsistsBySeasonAsync(string season, string balkan)
+        private async Task<List<AllStatsDto>> GetAsistsBySeasonAsync(string season, bool balkan)
         {
             if (season == "Previous")
             {
@@ -230,7 +230,7 @@ namespace Dymitro.Services
             }).ToList();
         }
 
-        private async Task<IEnumerable<PlayerSeasonRow>> GetSeasonRowsAsync(string season, string balkan, string orderColumn)
+        private async Task<IEnumerable<PlayerSeasonRow>> GetSeasonRowsAsync(string season, bool balkan, string orderColumn)
         {
             var counteri = GetBalkanFilter(balkan);
 
@@ -246,7 +246,7 @@ namespace Dymitro.Services
             return await connection.QueryAsync<PlayerSeasonRow>(sql, new { Season = season, Counteri = counteri });
         }
 
-        private async Task<List<PlayerMetricSum>> GetMetricSumsAsync(string season, string balkan, string metricColumn)
+        private async Task<List<PlayerMetricSum>> GetMetricSumsAsync(string season, bool balkan, string metricColumn)
         {
             var counteri = GetBalkanFilter(balkan);
 
